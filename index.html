@@ -1,0 +1,2714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoDex - Environmental Education Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            font-size: 14px;
+            line-height: 1.5;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b  50%, #334155 100%);
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        
+        .modern-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .modern-bg::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .eco-gradient {
+            background: linear-gradient(135deg, #10b981, #059669, #047857);
+            border-radius: 16px;
+            box-shadow: 
+                0 4px 20px rgba(16, 185, 129, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .eco-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .modern-button {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 15px rgba(34, 197, 94, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modern-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(34, 197, 94, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .modern-button:active {
+            transform: translateY(0);
+        }
+        
+        .progress-modern {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill-modern {
+            background: linear-gradient(90deg, #22c55e, #10b981, #059669);
+            height: 100%;
+            border-radius: 10px;
+            position: relative;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .progress-fill-modern {
+            background: linear-gradient(90deg, #22c55e, #10b981, #059669);
+            height: 100%;
+            border-radius: 10px;
+            position: relative;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .modern-header {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(59, 130, 246, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .mission-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .mission-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+        
+        .modern-tab {
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            color: #94a3b8;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .modern-tab.active {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+        }
+        
+        .modern-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+            color: #f1f5f9;
+        }
+        
+        .coin-modern {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+            border-radius: 12px;
+            box-shadow: 
+                0 4px 20px rgba(251, 191, 36, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .coin-modern {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+            border-radius: 12px;
+            box-shadow: 
+                0 4px 20px rgba(251, 191, 36, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .health-modern {
+            background: rgba(239, 68, 68, 0.2);
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+        }
+        
+        .health-fill-modern {
+            background: linear-gradient(90deg, #ef4444, #f97316, #eab308, #22c55e);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .health-fill-modern {
+            background: linear-gradient(90deg, #ef4444, #f97316, #eab308, #22c55e);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            font-size: 16px;
+            animation: float-up 12s linear infinite;
+            opacity: 0;
+        }
+        
+        .particle {
+            display: none;
+        }
+        
+        .glow-text {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #22c55e, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            text-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .badge-modern {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .badge-modern:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
+        }
+        
+        .leaderboard-modern {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .leaderboard-modern:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .forest-modern {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .forest-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2322c55e' fill-opacity='0.1'%3E%3Cpolygon points='20,5 15,15 25,15'/%3E%3Cpolygon points='20,10 12,20 28,20'/%3E%3Cpolygon points='20,15 10,25 30,25'/%3E%3Crect x='18' y='25' width='4' height='8' fill='%23a16207' fill-opacity='0.2'/%3E%3C/g%3E%3C/svg%3E") repeat;
+            opacity: 0.3;
+        }
+        
+        @keyframes fade-in-out {
+            0% { opacity: 0; transform: translateY(-10px) scale(0.9); }
+            50% { opacity: 1; transform: translateY(0) scale(1.1); }
+            100% { opacity: 0; transform: translateY(10px) scale(0.9); }
+        }
+        
+        .fade-animation {
+            animation: fade-in-out 2s ease-in-out;
+        }
+        
+        .notification-modern {
+            background: rgba(34, 197, 94, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+        }
+        
+        .modal-modern {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .scrollbar-modern::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollbar-modern::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        
+        .scrollbar-modern::-webkit-scrollbar-thumb {
+            background: rgba(34, 197, 94, 0.5);
+            border-radius: 3px;
+        }
+        
+        .scrollbar-modern::-webkit-scrollbar-thumb:hover {
+            background: rgba(34, 197, 94, 0.7);
+        }
+        
+        .pulse-glow {
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+    </style>
+</head>
+<body class="modern-bg min-h-screen">
+    <!-- Floating Particles -->
+    <div class="floating-particles" id="particles"></div>
+    <!-- Header -->
+    <header class="modern-header">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-purple-500/20 border border-purple-500/30 p-3 rounded-2xl">
+                        <div class="text-2xl">🌱</div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-purple-400">EcoDex</h1>
+                        <p class="text-sm text-slate-400 font-medium">Environmental Gaming Platform</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div class="bg-purple-500/20 text-purple-400 border border-purple-500/30 px-4 py-2 text-sm font-semibold rounded-lg">
+                        <span class="opacity-90">XP: </span>
+                        <span id="xp">3,250</span>
+                    </div>
+                    <div class="coin-modern px-4 py-2 text-sm font-semibold text-white">
+                        <span class="opacity-90">GP: </span>
+                        <span id="points">2,450</span>
+                    </div>
+                    <div class="bg-purple-500/20 text-purple-400 border border-purple-500/30 px-4 py-2 text-sm font-semibold rounded-lg">
+                        <span class="opacity-90">Rank: </span>
+                        <span>#47</span>
+                    </div>
+                    <div class="w-12 h-12 eco-gradient rounded-2xl flex items-center justify-center text-white font-bold text-lg">
+                        A
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- Progress Overview -->
+                <div class="glass-card p-6 mb-6">
+                    <h3 class="text-lg font-bold mb-6 text-white">Your Impact</h3>
+                    <div class="space-y-6">
+                        <!-- Tree Background Image -->
+                        <div class="h-40 mb-6 rounded-2xl overflow-hidden relative">
+                            <img src="https://cdn.pixabay.com/photo/2015/12/01/20/28/forest-1072828_1280.jpg" alt="Forest background" class="w-full h-full object-cover" onerror="this.src=''; this.alt='Forest image failed to load'; this.style.display='none';">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <div class="text-sm font-medium opacity-90">Your Environmental Journey</div>
+                                <div class="text-lg font-bold">Making a Difference 🌱</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="stat-card">
+                                <div class="text-3xl mb-2">✅</div>
+                                <div class="text-xl font-bold text-white">8</div>
+                                <div class="text-sm text-slate-400">Tasks Completed</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="text-3xl mb-2">📚</div>
+                                <div class="text-xl font-bold text-white">3</div>
+                                <div class="text-sm text-slate-400">Lectures Done</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Curriculum Progress -->
+                        <div class="mt-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-medium text-slate-300">Curriculum Progress</span>
+                                <span class="text-sm font-bold text-emerald-400">45%</span>
+                            </div>
+                            <div class="progress-modern">
+                                <div class="progress-fill-modern" style="width: 45%"></div>
+                            </div>
+                            <div class="text-xs text-slate-400 mt-2">5 of 11 modules completed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements -->
+                <div class="glass-card p-6">
+                    <h3 class="text-lg font-bold mb-6 text-white">Eco Badges</h3>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="badge-modern p-3 text-center">
+                            <div class="text-2xl mb-2">🌱</div>
+                            <div class="text-xs font-medium text-amber-300">Seed</div>
+                        </div>
+                        <div class="badge-modern p-3 text-center">
+                            <div class="text-2xl mb-2">🌿</div>
+                            <div class="text-xs font-medium text-amber-300">Green Thumb</div>
+                        </div>
+                        <div class="badge-modern p-3 text-center">
+                            <div class="text-2xl mb-2">🏆</div>
+                            <div class="text-xs font-medium text-amber-300">Champion</div>
+                        </div>
+                        <div class="stat-card p-3 text-center opacity-40">
+                            <div class="text-2xl mb-2">🌍</div>
+                            <div class="text-xs font-medium text-slate-500">Planet Saver</div>
+                        </div>
+                        <div class="stat-card p-3 text-center opacity-40">
+                            <div class="text-2xl mb-2">⚡</div>
+                            <div class="text-xs font-medium text-slate-500">Eco Hero</div>
+                        </div>
+                        <div class="stat-card p-3 text-center opacity-40">
+                            <div class="text-2xl mb-2">👑</div>
+                            <div class="text-xs font-medium text-slate-500">Master</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="lg:col-span-3">
+                <!-- Navigation Tabs -->
+                <div class="glass-card mb-8">
+                    <div class="p-2">
+                        <nav class="flex space-x-2">
+                            <button class="tab-btn modern-tab active" data-tab="missions">
+                                🎯 Missions
+                            </button>
+                            <button class="tab-btn modern-tab" data-tab="lessons">
+                                📚 Learn
+                            </button>
+                            <button class="tab-btn modern-tab" data-tab="leaderboard">
+                                🏆 Leaderboard
+                            </button>
+                            <button class="tab-btn modern-tab" data-tab="shop">
+                                🛒 Shop
+                            </button>
+                            <button class="tab-btn modern-tab" data-tab="garden">
+                                🌳 Garden
+                            </button>
+                            <button class="tab-btn modern-tab" data-tab="community">
+                                👥 Community
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Eco Missions Tab -->
+                <div id="missions-content" class="tab-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="mission-card p-6 cursor-pointer relative" onclick="startMission('Tree Planting')">
+                            <div class="absolute top-4 right-4">
+                                <span class="coin-modern px-3 py-1 text-xs font-semibold text-white">ACTIVE</span>
+                            </div>
+                            <div class="flex items-start space-x-4 mb-4">
+                                <div class="eco-gradient p-3 rounded-2xl">
+                                    <div class="text-2xl">🌳</div>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold mb-2 text-white">Tree Planting Quest</h3>
+                                    <p class="text-sm text-slate-300 mb-4">Plant native trees in your area. Document progress and earn Green Points!</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-2 text-sm text-slate-400">
+                                    <div class="flex items-center space-x-2">
+                                        <span>⏱️</span>
+                                        <span>2 weeks remaining</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span>👥</span>
+                                        <span>245 participants</span>
+                                    </div>
+                                </div>
+                                <div class="coin-modern px-4 py-2 font-bold text-white">+150 GP</div>
+                            </div>
+                        </div>
+
+                        <div class="mission-card p-6 cursor-pointer relative" onclick="startMission('Waste Segregation')">
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-blue-500 px-3 py-1 text-xs font-semibold text-white rounded-full">NEW</span>
+                            </div>
+                            <div class="flex items-start space-x-4 mb-4">
+                                <div class="eco-gradient p-3 rounded-2xl">
+                                    <div class="text-2xl">♻️</div>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold mb-2 text-white">Waste Sorting Quest</h3>
+                                    <p class="text-sm text-slate-300 mb-4">Master waste segregation and create recycling systems!</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-2 text-sm text-slate-400">
+                                    <div class="flex items-center space-x-2">
+                                        <span>⏱️</span>
+                                        <span>1 week remaining</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span>👥</span>
+                                        <span>89 participants</span>
+                                    </div>
+                                </div>
+                                <div class="coin-modern px-4 py-2 font-bold text-white">+100 GP</div>
+                            </div>
+                        </div>
+
+                        <div class="mission-card p-6 cursor-pointer relative" onclick="startMission('Water Conservation')">
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-red-500 px-3 py-1 text-xs font-semibold text-white rounded-full">HOT</span>
+                            </div>
+                            <div class="flex items-start space-x-4 mb-4">
+                                <div class="eco-gradient p-3 rounded-2xl">
+                                    <div class="text-2xl">💧</div>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold mb-2 text-white">Water Hero Quest</h3>
+                                    <p class="text-sm text-slate-300 mb-4">Save water and teach conservation techniques!</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-2 text-sm text-slate-400">
+                                    <div class="flex items-center space-x-2">
+                                        <span>⏱️</span>
+                                        <span>3 weeks remaining</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span>👥</span>
+                                        <span>156 participants</span>
+                                    </div>
+                                </div>
+                                <div class="coin-modern px-4 py-2 font-bold text-white">+200 GP</div>
+                            </div>
+                        </div>
+
+                        <div class="mission-card p-6 cursor-pointer relative" onclick="startMission('Solar Energy')">
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-purple-500 px-3 py-1 text-xs font-semibold text-white rounded-full">EXPERT</span>
+                            </div>
+                            <div class="flex items-start space-x-4 mb-4">
+                                <div class="eco-gradient p-3 rounded-2xl">
+                                    <div class="text-2xl">☀️</div>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold mb-2 text-white">Solar Power Quest</h3>
+                                    <p class="text-sm text-slate-300 mb-4">Build solar devices and spread renewable energy!</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-2 text-sm text-slate-400">
+                                    <div class="flex items-center space-x-2">
+                                        <span>⏱️</span>
+                                        <span>4 weeks remaining</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span>👥</span>
+                                        <span>67 participants</span>
+                                    </div>
+                                </div>
+                                <div class="coin-modern px-4 py-2 font-bold text-white">+300 GP</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learn & Grow Tab -->
+                <div id="lessons-content" class="tab-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="mission-card p-6 cursor-pointer relative" onclick="openLesson('Climate Change & India', 'climate')">
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-sm font-medium">Completed</span>
+                            </div>
+                            <div class="flex items-start space-x-4 mb-4">
+                                <div class="eco-gradient p-3 rounded-2xl">
+                                    <div class="text-2xl">🌡️</div>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold mb-2 text-white">Climate Change & India</h3>
+                                    <p class="text-sm text-slate-300 mb-4">Understanding climate impacts on Indian agriculture, monsoons, and coastal regions</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-2 text-sm text-slate-400">
+                                    <div class="flex items-center space-x-2">
+                                        <span>⏱️</span>
+                                        <span>20 minutes</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span>📝</span>
+                                        <span>Quiz included</span>
+                                    </div>
+                                </div>
+                                <div class="bg-purple-500/20 text-purple-400 px-4 py-2 font-bold rounded-lg">+100 XP</div>
+                            </div>
+                        </div>
+
+                        <div class="mission-card p-6 cursor-pointer relative" onclick="openLesson('Biodiversity in Indian Forests', 'biodiversity')">
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm font-medium">Current</span>
+                            </div>
+                            <div class="flex items-start space-x-4 mb-4">
+                                <div class="eco-gradient p-3 rounded-2xl">
+                                    <div class="text-2xl">🌳</div>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold mb-2 text-white">Biodiversity in Indian Forests</h3>
+                                    <p class="text-sm text-slate-300 mb-4">Explore India's rich biodiversity and conservation efforts in national parks</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-2 text-sm text-slate-400">
+                                    <div class="flex items-center space-x-2">
+                                        <span>⏱️</span>
+                                        <span>25 minutes</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span>🗺️</span>
+                                        <span>Interactive map</span>
+                                    </div>
+                                </div>
+                                <div class="bg-purple-500/20 text-purple-400 px-4 py-2 font-bold rounded-lg">+125 XP</div>
+                            </div>
+                        </div>
+
+                        <div class="mission-card p-6 cursor-pointer relative opacity-60" onclick="showLockedMessage()">
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-slate-600/20 text-slate-500 px-3 py-1 rounded-full text-sm font-medium">Locked</span>
+                            </div>
+                            <div class="flex items-start space-x-4 mb-4">
+                                <div class="bg-slate-600/20 p-3 rounded-2xl">
+                                    <div class="text-2xl opacity-50">🌾</div>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold mb-2 text-slate-500">Sustainable Agriculture</h3>
+                                    <p class="text-sm text-slate-500 mb-4">Learn about organic farming and sustainable practices for Indian agriculture</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-2 text-sm text-slate-500">
+                                    <div class="flex items-center space-x-2">
+                                        <span>⏱️</span>
+                                        <span>30 minutes</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span>🔬</span>
+                                        <span>Field study</span>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-600/20 text-slate-500 px-4 py-2 font-bold rounded-lg">+150 XP</div>
+                            </div>
+                        </div>
+
+                        <div class="mission-card p-6 cursor-pointer relative opacity-60" onclick="showLockedMessage()">
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-slate-600/20 text-slate-500 px-3 py-1 rounded-full text-sm font-medium">Locked</span>
+                            </div>
+                            <div class="flex items-start space-x-4 mb-4">
+                                <div class="bg-slate-600/20 p-3 rounded-2xl">
+                                    <div class="text-2xl opacity-50">⚡</div>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold mb-2 text-slate-500">Renewable Energy Solutions</h3>
+                                    <p class="text-sm text-slate-500 mb-4">Discover solar, wind, and other renewable energy options for India</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-2 text-sm text-slate-500">
+                                    <div class="flex items-center space-x-2">
+                                        <span>⏱️</span>
+                                        <span>35 minutes</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span>🔧</span>
+                                        <span>Project work</span>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-600/20 text-slate-500 px-4 py-2 font-bold rounded-lg">+175 XP</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaderboard Tab -->
+                <div id="leaderboard-content" class="tab-content hidden">
+                    <div class="glass-card">
+                        <div class="p-6 border-b border-white/10">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xl font-bold text-white">🏆 National Eco Leaderboard</h3>
+                                <select class="glass-card px-4 py-2 text-sm text-white bg-transparent border border-white/20 rounded-lg">
+                                    <option class="bg-slate-800">This Month</option>
+                                    <option class="bg-slate-800">This Week</option>
+                                    <option class="bg-slate-800">All Time</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-4">
+                                <div class="leaderboard-modern p-4 border-2 border-yellow-500/30 bg-gradient-to-r from-yellow-500/10 to-orange-500/10">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="text-3xl">🥇</div>
+                                            <div class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-2xl flex items-center justify-center text-white font-bold text-lg">
+                                                P
+                                            </div>
+                                            <div>
+                                                <div class="font-bold text-white text-lg">Priya Sharma</div>
+                                                <div class="text-sm text-slate-300">Delhi Public School, Mumbai</div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="font-bold text-yellow-400 text-xl">8,450 XP</div>
+                                            <div class="text-sm text-slate-300">🌳 45 trees planted</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="leaderboard-modern p-4 border border-white/10">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="text-3xl">🥈</div>
+                                            <div class="w-12 h-12 bg-gradient-to-r from-gray-400 to-gray-500 rounded-2xl flex items-center justify-center text-white font-bold text-lg">
+                                                R
+                                            </div>
+                                            <div>
+                                                <div class="font-bold text-white">Rahul Gupta</div>
+                                                <div class="text-sm text-slate-300">Kendriya Vidyalaya, Bangalore</div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="font-bold text-gray-300 text-lg">7,320 XP</div>
+                                            <div class="text-sm text-slate-300">♻️ 200kg recycled</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="leaderboard-modern p-4 border-2 border-orange-500/30 bg-gradient-to-r from-orange-500/10 to-red-500/10">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="text-3xl">🥉</div>
+                                            <div class="w-12 h-12 bg-gradient-to-r from-orange-400 to-red-400 rounded-2xl flex items-center justify-center text-white font-bold text-lg">
+                                                A
+                                            </div>
+                                            <div>
+                                                <div class="font-bold text-white">Ananya Patel</div>
+                                                <div class="text-sm text-slate-300">DAV School, Ahmedabad</div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="font-bold text-orange-400 text-lg">6,890 XP</div>
+                                            <div class="text-sm text-slate-300">💧 Water conservation project</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <div class="leaderboard-modern p-3">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-4">
+                                                <span class="text-slate-400 font-bold w-6">4</span>
+                                                <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center text-white font-bold">S</div>
+                                                <span class="font-semibold text-white">Sneha Reddy</span>
+                                            </div>
+                                            <span class="font-bold text-slate-300">5,450 XP</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="border-l-4 border-emerald-500 bg-emerald-500/10 p-4 rounded-lg">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-4">
+                                                <span class="text-emerald-400 font-bold w-6">47</span>
+                                                <div class="w-10 h-10 eco-gradient rounded-xl flex items-center justify-center text-white font-bold">A</div>
+                                                <span class="font-semibold text-white">You</span>
+                                            </div>
+                                            <span class="font-bold text-emerald-400">3,250 XP</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tree Shop Tab -->
+                <div id="shop-content" class="tab-content hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Shop Header -->
+                        <div class="lg:col-span-3 eco-gradient p-6 rounded-2xl mb-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-2xl font-bold mb-2 text-white">🌳 Tree Shop</h2>
+                                    <p class="text-emerald-100 opacity-90">Buy seeds to grow your virtual forest and support real tree planting!</p>
+                                </div>
+                                <div class="coin-modern px-4 py-2">
+                                    <div class="text-white font-semibold">GP: <span class="font-bold" id="shop-points">2,450</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tree Shop Items -->
+                        <div class="glass-card p-6 cursor-pointer">
+                            <div class="text-center mb-4">
+                                <div class="text-5xl mb-3">🌱</div>
+                                <h3 class="text-lg font-bold text-white mb-2">Neem Seed</h3>
+                                <p class="text-sm text-slate-300 mb-4">Fast-growing medicinal tree with air purifying properties</p>
+                            </div>
+                            <div class="space-y-3 text-sm text-slate-300 mb-6">
+                                <div class="flex justify-between">
+                                    <span>Growth Time:</span>
+                                    <span class="font-bold text-white">2 Hours</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Harvest Reward:</span>
+                                    <span class="font-bold text-emerald-400">+25 GP</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Environmental Impact:</span>
+                                    <span class="font-bold text-blue-400">1 Real Tree</span>
+                                </div>
+                            </div>
+                            <button onclick="buyTree('neem', 50)" class="w-full modern-button py-3 text-sm font-semibold">
+                                Buy for 50 GP
+                            </button>
+                        </div>
+
+                        <div class="glass-card p-6 cursor-pointer">
+                            <div class="text-center mb-4">
+                                <div class="text-5xl mb-3">🌳</div>
+                                <h3 class="text-lg font-bold text-white mb-2">Banyan Tree</h3>
+                                <p class="text-sm text-slate-300 mb-4">Majestic shade tree supporting entire ecosystems</p>
+                            </div>
+                            <div class="space-y-3 text-sm text-slate-300 mb-6">
+                                <div class="flex justify-between">
+                                    <span>Growth Time:</span>
+                                    <span class="font-bold text-white">6 Hours</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Harvest Reward:</span>
+                                    <span class="font-bold text-emerald-400">+75 GP</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Environmental Impact:</span>
+                                    <span class="font-bold text-blue-400">3 Real Trees</span>
+                                </div>
+                            </div>
+                            <button onclick="buyTree('banyan', 150)" class="w-full modern-button py-3 text-sm font-semibold">
+                                Buy for 150 GP
+                            </button>
+                        </div>
+
+                        <div class="glass-card p-6 cursor-pointer">
+                            <div class="text-center mb-4">
+                                <div class="text-5xl mb-3">🌸</div>
+                                <h3 class="text-lg font-bold text-white mb-2">Gulmohar</h3>
+                                <p class="text-sm text-slate-300 mb-4">Beautiful flowering tree perfect for urban areas</p>
+                            </div>
+                            <div class="space-y-3 text-sm text-slate-300 mb-6">
+                                <div class="flex justify-between">
+                                    <span>Growth Time:</span>
+                                    <span class="font-bold text-white">4 Hours</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Harvest Reward:</span>
+                                    <span class="font-bold text-emerald-400">+50 GP</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Environmental Impact:</span>
+                                    <span class="font-bold text-blue-400">2 Real Trees</span>
+                                </div>
+                            </div>
+                            <button onclick="buyTree('gulmohar', 100)" class="w-full modern-button py-3 text-sm font-semibold">
+                                Buy for 100 GP
+                            </button>
+                        </div>
+
+                        <div class="glass-card p-6 cursor-pointer">
+                            <div class="text-center mb-4">
+                                <div class="text-5xl mb-3">🥭</div>
+                                <h3 class="text-lg font-bold text-white mb-2">Mango Tree</h3>
+                                <p class="text-sm text-slate-300 mb-4">Fruit-bearing tree supporting communities</p>
+                            </div>
+                            <div class="space-y-3 text-sm text-slate-300 mb-6">
+                                <div class="flex justify-between">
+                                    <span>Growth Time:</span>
+                                    <span class="font-bold text-white">8 Hours</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Harvest Reward:</span>
+                                    <span class="font-bold text-emerald-400">+100 GP</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Environmental Impact:</span>
+                                    <span class="font-bold text-blue-400">5 Real Trees</span>
+                                </div>
+                            </div>
+                            <button onclick="buyTree('mango', 200)" class="w-full modern-button py-3 text-sm font-semibold">
+                                Buy for 200 GP
+                            </button>
+                        </div>
+
+                        <div class="glass-card p-6 cursor-pointer">
+                            <div class="text-center mb-4">
+                                <div class="text-5xl mb-3">🌲</div>
+                                <h3 class="text-lg font-bold text-white mb-2">Pine Tree</h3>
+                                <p class="text-sm text-slate-300 mb-4">Mountain evergreen preventing soil erosion</p>
+                            </div>
+                            <div class="space-y-3 text-sm text-slate-300 mb-6">
+                                <div class="flex justify-between">
+                                    <span>Growth Time:</span>
+                                    <span class="font-bold text-white">12 Hours</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Harvest Reward:</span>
+                                    <span class="font-bold text-emerald-400">+150 GP</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Environmental Impact:</span>
+                                    <span class="font-bold text-blue-400">7 Real Trees</span>
+                                </div>
+                            </div>
+                            <button onclick="buyTree('pine', 300)" class="w-full modern-button py-3 text-sm font-semibold">
+                                Buy for 300 GP
+                            </button>
+                        </div>
+
+                        <div class="glass-card p-6 cursor-pointer border-2 border-purple-500/30">
+                            <div class="text-center mb-4">
+                                <div class="text-5xl mb-3">🌺</div>
+                                <h3 class="text-lg font-bold text-white mb-2">Sacred Peepal</h3>
+                                <p class="text-sm text-slate-300 mb-2">Legendary oxygen-producing tree</p>
+                                <span class="bg-purple-500 text-white px-3 py-1 rounded-full text-xs font-bold">RARE</span>
+                            </div>
+                            <div class="space-y-3 text-sm text-slate-300 mb-6">
+                                <div class="flex justify-between">
+                                    <span>Growth Time:</span>
+                                    <span class="font-bold text-white">24 Hours</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Harvest Reward:</span>
+                                    <span class="font-bold text-emerald-400">+300 GP</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Environmental Impact:</span>
+                                    <span class="font-bold text-blue-400">10 Real Trees</span>
+                                </div>
+                            </div>
+                            <button onclick="buyTree('peepal', 500)" class="w-full modern-button py-3 text-sm font-semibold">
+                                Buy for 500 GP
+                            </button>
+                        </div>
+
+                        <!-- Fertilizer Section -->
+                        <div class="lg:col-span-3 mt-8">
+                            <div class="eco-gradient p-6 rounded-2xl mb-6">
+                                <h2 class="text-2xl font-bold mb-2 text-white">🌱 Garden Supplies</h2>
+                                <p class="text-emerald-100 opacity-90">Boost your tree growth with premium fertilizers and care items!</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="glass-card p-6 cursor-pointer">
+                                    <div class="text-center mb-4">
+                                        <div class="text-4xl mb-3">🌱</div>
+                                        <h3 class="text-lg font-bold text-white mb-2">Organic Fertilizer</h3>
+                                        <p class="text-sm text-slate-300 mb-4">Speeds up growth by 50% and improves tree health</p>
+                                    </div>
+                                    <div class="space-y-3 text-sm text-slate-300 mb-6">
+                                        <div class="flex justify-between">
+                                            <span>Effect Duration:</span>
+                                            <span class="font-bold text-white">24 Hours</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Growth Boost:</span>
+                                            <span class="font-bold text-emerald-400">+50%</span>
+                                        </div>
+                                    </div>
+                                    <button onclick="buyFertilizer(75)" class="w-full modern-button py-3 text-sm font-semibold">
+                                        Buy for 75 GP
+                                    </button>
+                                </div>
+
+                                <div class="glass-card p-6 cursor-pointer">
+                                    <div class="text-center mb-4">
+                                        <div class="text-4xl mb-3">💧</div>
+                                        <h3 class="text-lg font-bold text-white mb-2">Auto-Watering System</h3>
+                                        <p class="text-sm text-slate-300 mb-4">Automatically waters your trees for 7 days</p>
+                                    </div>
+                                    <div class="space-y-3 text-sm text-slate-300 mb-6">
+                                        <div class="flex justify-between">
+                                            <span>Duration:</span>
+                                            <span class="font-bold text-white">7 Days</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Coverage:</span>
+                                            <span class="font-bold text-blue-400">All Trees</span>
+                                        </div>
+                                    </div>
+                                    <button onclick="buyAutoWater(200)" class="w-full modern-button py-3 text-sm font-semibold">
+                                        Buy for 200 GP
+                                    </button>
+                                </div>
+
+                                <div class="glass-card p-6 cursor-pointer border-2 border-yellow-500/30">
+                                    <div class="text-center mb-4">
+                                        <div class="text-4xl mb-3">⚡</div>
+                                        <h3 class="text-lg font-bold text-white mb-2">Growth Accelerator</h3>
+                                        <p class="text-sm text-slate-300 mb-2">Instantly completes tree growth</p>
+                                        <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold">PREMIUM</span>
+                                    </div>
+                                    <div class="space-y-3 text-sm text-slate-300 mb-6">
+                                        <div class="flex justify-between">
+                                            <span>Effect:</span>
+                                            <span class="font-bold text-white">Instant Growth</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Usage:</span>
+                                            <span class="font-bold text-yellow-400">Single Use</span>
+                                        </div>
+                                    </div>
+                                    <button onclick="buyAccelerator(400)" class="w-full modern-button py-3 text-sm font-semibold">
+                                        Buy for 400 GP
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Garden Tab -->
+                <div id="garden-content" class="tab-content hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Garden Stats -->
+                        <div class="lg:col-span-3 eco-gradient p-6 rounded-2xl mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white" id="total-trees">5</div>
+                                    <div class="text-emerald-100 text-sm">Trees Owned</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white" id="fertilizer-count">3</div>
+                                    <div class="text-emerald-100 text-sm">Fertilizers</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white" id="co2-absorbed">156</div>
+                                    <div class="text-emerald-100 text-sm">kg CO₂ Absorbed</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white" id="oxygen-produced">234</div>
+                                    <div class="text-emerald-100 text-sm">kg O₂ Produced</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tree Navigation -->
+                        <div class="lg:col-span-1">
+                            <div class="glass-card p-6">
+                                <h3 class="text-lg font-bold text-white mb-4">🌳 My Trees</h3>
+                                <div class="space-y-3" id="tree-list">
+                                    <div class="tree-item glass-card p-4 cursor-pointer border-2 border-emerald-500/50" data-tree="0" onclick="selectTree(0)">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="text-2xl">🌳</div>
+                                                <div>
+                                                    <div class="font-semibold text-white text-sm">Neem Tree #1</div>
+                                                    <div class="text-xs text-slate-300">Mature • Ready to collect</div>
+                                                </div>
+                                            </div>
+                                            <div class="coin-modern px-2 py-1 text-xs font-bold text-white">25 GP</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="tree-item glass-card p-4 cursor-pointer" data-tree="1" onclick="selectTree(1)">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="text-2xl">🌸</div>
+                                                <div>
+                                                    <div class="font-semibold text-white text-sm">Gulmohar #1</div>
+                                                    <div class="text-xs text-slate-300">Growing • 2h left</div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-slate-600 px-2 py-1 text-xs font-bold text-slate-300 rounded">65%</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="tree-item glass-card p-4 cursor-pointer" data-tree="2" onclick="selectTree(2)">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="text-2xl">🥭</div>
+                                                <div>
+                                                    <div class="font-semibold text-white text-sm">Mango Tree #1</div>
+                                                    <div class="text-xs text-slate-300">Needs water</div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-red-500 px-2 py-1 text-xs font-bold text-white rounded">Thirsty</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="tree-item glass-card p-4 cursor-pointer" data-tree="3" onclick="selectTree(3)">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="text-2xl">🌲</div>
+                                                <div>
+                                                    <div class="font-semibold text-white text-sm">Pine Tree #1</div>
+                                                    <div class="text-xs text-slate-300">Healthy • Growing</div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-green-500 px-2 py-1 text-xs font-bold text-white rounded">Healthy</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="tree-item glass-card p-4 cursor-pointer" data-tree="4" onclick="selectTree(4)">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="text-2xl">🌺</div>
+                                                <div>
+                                                    <div class="font-semibold text-white text-sm">Peepal Tree #1</div>
+                                                    <div class="text-xs text-slate-300">Mature • Ready to collect</div>
+                                                </div>
+                                            </div>
+                                            <div class="coin-modern px-2 py-1 text-xs font-bold text-white">300 GP</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button onclick="switchToShop()" class="w-full modern-button mt-4 py-3 text-sm font-semibold">
+                                    🛒 Buy More Trees
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tree Detail View -->
+                        <div class="lg:col-span-2">
+                            <div class="glass-card p-6">
+                                <!-- Tree Navigation Arrows -->
+                                <div class="flex items-center justify-between mb-6">
+                                    <button onclick="previousTree()" class="modern-button px-4 py-2 text-sm font-semibold">
+                                        ← Previous
+                                    </button>
+                                    <h3 class="text-xl font-bold text-white" id="current-tree-title">Neem Tree #1</h3>
+                                    <button onclick="nextTree()" class="modern-button px-4 py-2 text-sm font-semibold">
+                                        Next →
+                                    </button>
+                                </div>
+
+                                <!-- Tree Visual -->
+                                <div class="text-center mb-8">
+                                    <div class="relative inline-block">
+                                        <div class="text-8xl mb-4" id="current-tree-emoji">🌳</div>
+                                        <div class="absolute -top-2 -right-2" id="tree-status-indicator">
+                                            <div class="w-6 h-6 bg-green-500 rounded-full border-2 border-white pulse-glow"></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-lg font-bold text-white mb-2" id="current-tree-name">Mature Neem Tree</div>
+                                    <div class="text-sm text-slate-300" id="current-tree-status">Ready to collect GP!</div>
+                                </div>
+
+                                <!-- Tree Stats -->
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="stat-card">
+                                        <div class="text-2xl mb-2">💧</div>
+                                        <div class="text-lg font-bold text-white" id="tree-water-level">85%</div>
+                                        <div class="text-sm text-slate-400">Water Level</div>
+                                        <div class="progress-modern mt-2">
+                                            <div class="progress-fill-modern" id="water-progress" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="stat-card">
+                                        <div class="text-2xl mb-2">🌱</div>
+                                        <div class="text-lg font-bold text-white" id="tree-growth-level">100%</div>
+                                        <div class="text-sm text-slate-400">Growth</div>
+                                        <div class="progress-modern mt-2">
+                                            <div class="progress-fill-modern" id="growth-progress" style="width: 100%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="stat-card">
+                                        <div class="text-2xl mb-2">🍃</div>
+                                        <div class="text-lg font-bold text-white" id="tree-health-level">Excellent</div>
+                                        <div class="text-sm text-slate-400">Health</div>
+                                    </div>
+                                    
+                                    <div class="stat-card">
+                                        <div class="text-2xl mb-2">⏰</div>
+                                        <div class="text-lg font-bold text-white" id="tree-next-harvest">Ready!</div>
+                                        <div class="text-sm text-slate-400">Next Harvest</div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="grid grid-cols-3 gap-4">
+                                    <button onclick="waterTree()" class="modern-button py-4 text-sm font-semibold" id="water-btn">
+                                        💧 Water Tree
+                                    </button>
+                                    
+                                    <button onclick="useFertilizer()" class="modern-button py-4 text-sm font-semibold" id="fertilizer-btn">
+                                        🌱 Use Fertilizer (3)
+                                    </button>
+                                    
+                                    <button onclick="collectGP()" class="coin-modern py-4 text-sm font-semibold text-white" id="collect-btn">
+                                        💰 Collect 25 GP
+                                    </button>
+                                </div>
+
+                                <!-- Tree Info -->
+                                <div class="mt-6 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
+                                    <h4 class="font-semibold text-emerald-400 mb-2">🌳 Tree Information</h4>
+                                    <p class="text-slate-300 text-sm" id="tree-info">
+                                        Neem trees are excellent air purifiers and have medicinal properties. They can absorb 48 pounds of CO₂ per year and produce oxygen continuously.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Community Tab -->
+                <div id="community-content" class="tab-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="glass-card p-6">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <div class="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center text-white font-bold text-lg">
+                                    EC
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-lg">Green Warriors Eco Club</h3>
+                                    <p class="text-sm text-slate-300">Mumbai • 234 members</p>
+                                </div>
+                            </div>
+                            <p class="text-slate-300 text-sm mb-6 leading-relaxed">Join our mission to make Mumbai greener! We organize tree planting drives, beach cleanups, and awareness campaigns.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-green-400 font-medium">🌱 Active this week</span>
+                                <button class="modern-button px-4 py-2 text-sm font-semibold">
+                                    Join Club
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white font-bold text-lg">
+                                    WC
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-lg">Water Conservation Alliance</h3>
+                                    <p class="text-sm text-slate-300">Bangalore • 156 members</p>
+                                </div>
+                            </div>
+                            <p class="text-slate-300 text-sm mb-6 leading-relaxed">Focused on water conservation projects and rainwater harvesting initiatives across Karnataka schools.</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-blue-400 font-medium">💧 Project ongoing</span>
+                                <button class="modern-button px-4 py-2 text-sm font-semibold">
+                                    Join Club
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6">
+                            <h3 class="font-bold text-white text-lg mb-6">Recent Community Posts</h3>
+                            <div class="space-y-4">
+                                <div class="border-l-4 border-green-500 pl-4 bg-green-500/5 py-3 rounded-r-lg">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <span class="font-semibold text-white text-sm">Arjun Kumar</span>
+                                        <span class="text-xs text-slate-400">2 hours ago</span>
+                                    </div>
+                                    <p class="text-sm text-slate-300">Just completed the tree planting mission! Planted 5 saplings in our school garden. 🌱</p>
+                                </div>
+                                
+                                <div class="border-l-4 border-blue-500 pl-4 bg-blue-500/5 py-3 rounded-r-lg">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <span class="font-semibold text-white text-sm">Meera Singh</span>
+                                        <span class="text-xs text-slate-400">5 hours ago</span>
+                                    </div>
+                                    <p class="text-sm text-slate-300">Our eco club collected 50kg of plastic waste today! Great teamwork everyone! ♻️</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6">
+                            <h3 class="font-bold text-white text-lg mb-6">NGO Partnerships</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-4 bg-green-500/10 border border-green-500/20 rounded-xl">
+                                    <div>
+                                        <div class="font-semibold text-white">Greenpeace India</div>
+                                        <div class="text-sm text-slate-300">Climate action campaigns</div>
+                                    </div>
+                                    <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-medium">Partner</span>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                                    <div>
+                                        <div class="font-semibold text-white">WWF India</div>
+                                        <div class="text-sm text-slate-300">Wildlife conservation</div>
+                                    </div>
+                                    <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm font-medium">Partner</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mission Modal -->
+    <div id="mission-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="modal-modern max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
+            <div class="flex items-center justify-between p-6 border-b border-white/10">
+                <h2 id="mission-title" class="text-2xl font-bold text-white">Urban Tree Planting Challenge</h2>
+                <button onclick="closeMissionModal()" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)] scrollbar-modern">
+                <div id="mission-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-bold mb-4 text-white">Mission Overview</h3>
+                            <p class="text-slate-300 mb-6 leading-relaxed">Join the nationwide tree planting initiative! Learn about native Indian tree species, proper planting techniques, and contribute to India's goal of increasing forest cover.</p>
+                            
+                            <h4 class="font-bold mb-4 text-white">Mission Steps:</h4>
+                            <div class="space-y-4 mb-8">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-8 h-8 eco-gradient text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                                    <span class="text-slate-300">Learn about native tree species in your region</span>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-8 h-8 eco-gradient text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                                    <span class="text-slate-300">Get saplings from local nursery or forest department</span>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-8 h-8 eco-gradient text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                                    <span class="text-slate-300">Plant trees in designated areas with proper care</span>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-8 h-8 eco-gradient text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                                    <span class="text-slate-300">Document your progress with photos and updates</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 rounded-lg p-4 mb-6">
+                                <h4 class="font-semibold text-green-800 mb-2">Impact Goal</h4>
+                                <p class="text-green-700 text-sm">Plant 10,000 trees across India this month to support the National Forest Policy goals and combat climate change.</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold mb-3 text-white">Progress Tracking</h4>
+                            <div class="bg-slate-800 border border-slate-600 rounded-lg p-4 mb-4">
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-slate-200">Trees Planted Nationally</span>
+                                    <span class="font-medium text-white">2,847 / 10,000</span>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 28%"></div>
+                                </div>
+                            </div>
+
+                            <h4 class="font-semibold mb-3 text-white">Rewards & Recognition</h4>
+                            <div class="space-y-2 mb-6">
+                                <div class="flex items-center justify-between p-3 bg-slate-800 border border-yellow-500/30 rounded">
+                                    <span class="text-sm text-slate-200">Plant 1 tree</span>
+                                    <span class="text-sm text-yellow-400 font-bold">+50 GP</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-slate-800 border border-green-500/30 rounded">
+                                    <span class="text-sm text-slate-200">Plant 5 trees</span>
+                                    <span class="text-sm text-green-400 font-bold">+150 GP + Badge</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-slate-800 border border-blue-500/30 rounded">
+                                    <span class="text-sm text-slate-200">Complete mission</span>
+                                    <span class="text-sm text-blue-400 font-bold">+300 GP + Certificate</span>
+                                </div>
+                            </div>
+
+                            <button onclick="joinMission()" class="w-full modern-button py-4 text-lg font-semibold">
+                                Join Mission - Start Planting! 🌱
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lesson Modal -->
+    <div id="lesson-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="modal-modern max-w-6xl w-full mx-4 max-h-[90vh] overflow-hidden">
+            <div class="flex items-center justify-between p-6 border-b border-white/10">
+                <h2 id="lesson-title" class="text-2xl font-bold text-white">Climate Change & India</h2>
+                <button onclick="closeLessonModal()" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)] scrollbar-modern">
+                <div id="lesson-content">
+                    <!-- Video Player Section -->
+                    <div class="mb-8">
+                        <div class="relative bg-black rounded-xl overflow-hidden">
+                            <div class="aspect-video relative" id="lesson-video-container">
+                                <div class="absolute inset-0 bg-gradient-to-br from-red-900/50 to-orange-900/50 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <div class="text-6xl mb-4" id="lesson-video-emoji">🌡️</div>
+                                        <div class="text-white font-bold text-lg mb-2" id="lesson-video-title">Climate Change in India</div>
+                                        <div class="text-slate-300 text-sm mb-4" id="lesson-video-duration">Duration: 20:15</div>
+                                        <button onclick="playLessonVideo()" class="modern-button px-6 py-3 text-sm font-semibold" id="lesson-play-btn">
+                                            ▶️ Play Video
+                                        </button>
+                                    </div>
+                                </div>
+                                <button onclick="fullscreenLessonVideo()" class="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-lg hover:bg-black/70 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes Section -->
+                    <div class="bg-slate-800/50 border border-slate-600/30 rounded-xl p-6 mb-8">
+                        <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                            📝 Lesson Notes
+                        </h3>
+                        <div id="lesson-notes" class="space-y-4 text-sm text-slate-300">
+                            <!-- Notes will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Quiz Section -->
+                    <div class="bg-purple-500/10 border border-purple-500/20 rounded-xl p-6">
+                        <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                            🧠 Knowledge Quiz
+                        </h3>
+                        <div id="quiz-container">
+                            <!-- Quiz will be populated by JavaScript -->
+                        </div>
+                        <div class="flex justify-between mt-6">
+                            <button onclick="closeLessonModal()" class="bg-slate-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-slate-700 transition-colors">
+                                ← Back to Lessons
+                            </button>
+                            <button onclick="takeQuiz()" class="modern-button px-8 py-3 text-lg font-semibold" id="quiz-btn">
+                                Take Quiz & Earn XP! 🏆
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                
+                // Update tab buttons
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                btn.classList.add('active');
+                
+                // Update content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(tab + '-content').classList.remove('hidden');
+            });
+        });
+
+        // Garden system variables
+        let userPoints = 2450;
+        let userXP = 3250;
+        let fertilizerCount = 3;
+        let currentTreeIndex = 0;
+        
+        let myTrees = [
+            {
+                id: 0,
+                type: 'neem',
+                name: 'Neem Tree #1',
+                emoji: '🌳',
+                waterLevel: 85,
+                growth: 100,
+                health: 'Excellent',
+                canCollect: true,
+                gpReward: 25,
+                lastWatered: Date.now() - 2 * 60 * 60 * 1000,
+                info: 'Neem trees are excellent air purifiers and have medicinal properties. They can absorb 48 pounds of CO₂ per year and produce oxygen continuously.'
+            },
+            {
+                id: 1,
+                type: 'gulmohar',
+                name: 'Gulmohar #1',
+                emoji: '🌸',
+                waterLevel: 60,
+                growth: 65,
+                health: 'Good',
+                canCollect: false,
+                gpReward: 50,
+                lastWatered: Date.now() - 4 * 60 * 60 * 1000,
+                info: 'Gulmohar trees are famous for their vibrant red-orange flowers and provide excellent shade in urban areas.'
+            },
+            {
+                id: 2,
+                type: 'mango',
+                name: 'Mango Tree #1',
+                emoji: '🥭',
+                waterLevel: 25,
+                growth: 80,
+                health: 'Needs Water',
+                canCollect: false,
+                gpReward: 100,
+                lastWatered: Date.now() - 8 * 60 * 60 * 1000,
+                info: 'Mango trees not only provide delicious fruit but also support local communities and wildlife.'
+            },
+            {
+                id: 3,
+                type: 'pine',
+                name: 'Pine Tree #1',
+                emoji: '🌲',
+                waterLevel: 90,
+                growth: 75,
+                health: 'Healthy',
+                canCollect: false,
+                gpReward: 150,
+                lastWatered: Date.now() - 1 * 60 * 60 * 1000,
+                info: 'Pine trees are excellent for mountain regions and help prevent soil erosion while providing year-round greenery.'
+            },
+            {
+                id: 4,
+                type: 'peepal',
+                name: 'Peepal Tree #1',
+                emoji: '🌺',
+                waterLevel: 95,
+                growth: 100,
+                health: 'Excellent',
+                canCollect: true,
+                gpReward: 300,
+                lastWatered: Date.now() - 30 * 60 * 1000,
+                info: 'Peepal trees are sacred in Indian culture and are excellent oxygen producers, especially at night.'
+            }
+        ];
+
+        function buyTree(type, cost) {
+            if (userPoints >= cost) {
+                userPoints -= cost;
+                
+                // Update points display
+                document.getElementById('points').textContent = userPoints.toLocaleString();
+                document.getElementById('shop-points').textContent = userPoints.toLocaleString();
+                
+                // Add new tree to collection
+                const treeEmojis = {
+                    'neem': '🌳',
+                    'banyan': '🌳',
+                    'gulmohar': '🌸',
+                    'mango': '🥭',
+                    'pine': '🌲',
+                    'peepal': '🌺'
+                };
+                
+                const gpRewards = {
+                    'neem': 25,
+                    'banyan': 75,
+                    'gulmohar': 50,
+                    'mango': 100,
+                    'pine': 150,
+                    'peepal': 300
+                };
+                
+                const newTree = {
+                    id: myTrees.length,
+                    type: type,
+                    name: `${type.charAt(0).toUpperCase() + type.slice(1)} Tree #${myTrees.filter(t => t.type === type).length + 1}`,
+                    emoji: treeEmojis[type],
+                    waterLevel: 100,
+                    growth: 0,
+                    health: 'Seedling',
+                    canCollect: false,
+                    gpReward: gpRewards[type],
+                    lastWatered: Date.now(),
+                    info: getTreeInfo(type)
+                };
+                
+                myTrees.push(newTree);
+                
+                // Update total trees count
+                document.getElementById('total-trees').textContent = myTrees.length;
+                
+                // Show success animation
+                const success = document.createElement('div');
+                success.innerHTML = `🌱 ${type.charAt(0).toUpperCase() + type.slice(1)} tree planted!`;
+                success.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 notification-modern px-8 py-4 text-lg z-50 fade-animation';
+                document.body.appendChild(success);
+                
+                setTimeout(() => {
+                    success.remove();
+                }, 2000);
+                
+                updateTreeList();
+                updateTreeDisplay();
+            } else {
+                alert('Not enough Green Points! Complete more missions to earn GP.');
+            }
+        }
+
+        function getTreeInfo(type) {
+            const treeInfos = {
+                'neem': 'Neem trees are excellent air purifiers and have medicinal properties. They can absorb 48 pounds of CO₂ per year and produce oxygen continuously.',
+                'banyan': 'Banyan trees provide extensive shade and can support entire ecosystems. They\'re known for their aerial roots and longevity.',
+                'gulmohar': 'Gulmohar trees are famous for their vibrant red-orange flowers and provide excellent shade in urban areas.',
+                'mango': 'Mango trees not only provide delicious fruit but also support local communities and wildlife.',
+                'pine': 'Pine trees are excellent for mountain regions and help prevent soil erosion while providing year-round greenery.',
+                'peepal': 'Peepal trees are sacred in Indian culture and are excellent oxygen producers, especially at night.'
+            };
+            return treeInfos[type] || 'This tree contributes to a healthier environment and supports biodiversity!';
+        }
+
+        function selectTree(index) {
+            currentTreeIndex = index;
+            
+            // Update tree list selection
+            document.querySelectorAll('.tree-item').forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('border-2', 'border-emerald-500/50');
+                } else {
+                    item.classList.remove('border-2', 'border-emerald-500/50');
+                }
+            });
+            
+            updateTreeDisplay();
+        }
+
+        function updateTreeDisplay() {
+            const tree = myTrees[currentTreeIndex];
+            if (!tree) return;
+            
+            // Update tree details
+            document.getElementById('current-tree-title').textContent = tree.name;
+            document.getElementById('current-tree-emoji').textContent = tree.emoji;
+            document.getElementById('current-tree-name').textContent = tree.name;
+            document.getElementById('current-tree-status').textContent = getTreeStatusText(tree);
+            
+            // Update stats
+            document.getElementById('tree-water-level').textContent = tree.waterLevel + '%';
+            document.getElementById('tree-growth-level').textContent = tree.growth + '%';
+            document.getElementById('tree-health-level').textContent = tree.health;
+            document.getElementById('tree-next-harvest').textContent = tree.canCollect ? 'Ready!' : getNextHarvestTime(tree);
+            
+            // Update progress bars
+            document.getElementById('water-progress').style.width = tree.waterLevel + '%';
+            document.getElementById('growth-progress').style.width = tree.growth + '%';
+            
+            // Update status indicator
+            const indicator = document.getElementById('tree-status-indicator');
+            if (tree.canCollect) {
+                indicator.innerHTML = '<div class="w-6 h-6 bg-green-500 rounded-full border-2 border-white pulse-glow"></div>';
+            } else if (tree.waterLevel < 30) {
+                indicator.innerHTML = '<div class="w-6 h-6 bg-red-500 rounded-full border-2 border-white"></div>';
+            } else {
+                indicator.innerHTML = '<div class="w-6 h-6 bg-yellow-500 rounded-full border-2 border-white"></div>';
+            }
+            
+            // Update buttons
+            document.getElementById('water-btn').textContent = tree.waterLevel < 100 ? '💧 Water Tree' : '💧 Fully Watered';
+            document.getElementById('fertilizer-btn').textContent = `🌱 Use Fertilizer (${fertilizerCount})`;
+            document.getElementById('collect-btn').textContent = tree.canCollect ? `💰 Collect ${tree.gpReward} GP` : '💰 Not Ready';
+            
+            // Update tree info
+            document.getElementById('tree-info').textContent = tree.info;
+            
+            // Enable/disable buttons
+            document.getElementById('water-btn').disabled = tree.waterLevel >= 100;
+            document.getElementById('fertilizer-btn').disabled = fertilizerCount <= 0;
+            document.getElementById('collect-btn').disabled = !tree.canCollect;
+        }
+
+        function getTreeStatusText(tree) {
+            if (tree.canCollect) return 'Ready to collect GP!';
+            if (tree.waterLevel < 30) return 'Needs water urgently!';
+            if (tree.growth < 100) return `Growing... ${tree.growth}% complete`;
+            return 'Healthy and growing!';
+        }
+
+        function getNextHarvestTime(tree) {
+            if (tree.growth < 100) return `${100 - tree.growth}% growth needed`;
+            return '6h remaining';
+        }
+
+        function waterTree() {
+            const tree = myTrees[currentTreeIndex];
+            if (tree.waterLevel < 100) {
+                tree.waterLevel = Math.min(100, tree.waterLevel + 25);
+                tree.lastWatered = Date.now();
+                
+                // Improve health if water was low
+                if (tree.waterLevel > 70 && tree.health === 'Needs Water') {
+                    tree.health = 'Good';
+                }
+                
+                // Show animation
+                const water = document.createElement('div');
+                water.innerHTML = '💧 Tree watered!';
+                water.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 notification-modern px-6 py-3 text-lg z-50 fade-animation';
+                document.body.appendChild(water);
+                
+                setTimeout(() => water.remove(), 2000);
+                
+                updateTreeDisplay();
+                updateTreeList();
+            }
+        }
+
+        function useFertilizer() {
+            if (fertilizerCount > 0) {
+                const tree = myTrees[currentTreeIndex];
+                fertilizerCount--;
+                
+                // Boost growth
+                tree.growth = Math.min(100, tree.growth + 25);
+                tree.health = 'Excellent';
+                
+                // Check if tree is now mature
+                if (tree.growth >= 100 && !tree.canCollect) {
+                    tree.canCollect = true;
+                }
+                
+                // Update fertilizer count display
+                document.getElementById('fertilizer-count').textContent = fertilizerCount;
+                
+                // Show animation
+                const fertilizer = document.createElement('div');
+                fertilizer.innerHTML = '🌱 Fertilizer applied!';
+                fertilizer.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 notification-modern px-6 py-3 text-lg z-50 fade-animation';
+                document.body.appendChild(fertilizer);
+                
+                setTimeout(() => fertilizer.remove(), 2000);
+                
+                updateTreeDisplay();
+                updateTreeList();
+            }
+        }
+
+        function collectGP() {
+            const tree = myTrees[currentTreeIndex];
+            if (tree.canCollect) {
+                userPoints += tree.gpReward;
+                tree.canCollect = false;
+                
+                // Update points display
+                document.getElementById('points').textContent = userPoints.toLocaleString();
+                document.getElementById('shop-points').textContent = userPoints.toLocaleString();
+                
+                // Show animation
+                const collect = document.createElement('div');
+                collect.innerHTML = `💰 +${tree.gpReward} GP collected!`;
+                collect.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 coin-modern px-6 py-3 text-lg z-50 fade-animation text-white font-bold';
+                document.body.appendChild(collect);
+                
+                setTimeout(() => collect.remove(), 2000);
+                
+                // Set next harvest time (simulate 6 hours)
+                setTimeout(() => {
+                    tree.canCollect = true;
+                    updateTreeDisplay();
+                    updateTreeList();
+                }, 6 * 60 * 60 * 1000); // 6 hours
+                
+                updateTreeDisplay();
+                updateTreeList();
+            }
+        }
+
+        function previousTree() {
+            currentTreeIndex = (currentTreeIndex - 1 + myTrees.length) % myTrees.length;
+            selectTree(currentTreeIndex);
+        }
+
+        function nextTree() {
+            currentTreeIndex = (currentTreeIndex + 1) % myTrees.length;
+            selectTree(currentTreeIndex);
+        }
+
+        function updateTreeList() {
+            const treeList = document.getElementById('tree-list');
+            treeList.innerHTML = '';
+            
+            myTrees.forEach((tree, index) => {
+                const statusClass = tree.canCollect ? 'coin-modern' : 
+                                  tree.waterLevel < 30 ? 'bg-red-500' : 
+                                  tree.growth < 100 ? 'bg-slate-600' : 'bg-green-500';
+                
+                const statusText = tree.canCollect ? `${tree.gpReward} GP` :
+                                 tree.waterLevel < 30 ? 'Thirsty' :
+                                 tree.growth < 100 ? `${tree.growth}%` : 'Healthy';
+                
+                const statusDescription = tree.canCollect ? 'Ready to collect' :
+                                        tree.waterLevel < 30 ? 'Needs water' :
+                                        tree.growth < 100 ? `Growing • ${Math.ceil((100 - tree.growth) / 10)}h left` :
+                                        'Healthy • Growing';
+                
+                const treeDiv = document.createElement('div');
+                treeDiv.className = `tree-item glass-card p-4 cursor-pointer ${index === currentTreeIndex ? 'border-2 border-emerald-500/50' : ''}`;
+                treeDiv.setAttribute('data-tree', index);
+                treeDiv.onclick = () => selectTree(index);
+                
+                treeDiv.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-2xl">${tree.emoji}</div>
+                            <div>
+                                <div class="font-semibold text-white text-sm">${tree.name}</div>
+                                <div class="text-xs text-slate-300">${statusDescription}</div>
+                            </div>
+                        </div>
+                        <div class="${statusClass} px-2 py-1 text-xs font-bold ${tree.canCollect ? 'text-white' : statusClass.includes('bg-') ? 'text-white' : 'text-slate-300'} rounded">${statusText}</div>
+                    </div>
+                `;
+                
+                treeList.appendChild(treeDiv);
+            });
+            
+            // Add buy more trees button
+            const buyButton = document.createElement('button');
+            buyButton.onclick = switchToShop;
+            buyButton.className = 'w-full modern-button mt-4 py-3 text-sm font-semibold';
+            buyButton.textContent = '🛒 Buy More Trees';
+            treeList.appendChild(buyButton);
+        }
+
+        function buyFertilizer(cost) {
+            if (userPoints >= cost) {
+                userPoints -= cost;
+                fertilizerCount++;
+                
+                // Update displays
+                document.getElementById('points').textContent = userPoints.toLocaleString();
+                document.getElementById('shop-points').textContent = userPoints.toLocaleString();
+                document.getElementById('fertilizer-count').textContent = fertilizerCount;
+                
+                // Show success animation
+                const success = document.createElement('div');
+                success.innerHTML = '🌱 Fertilizer purchased!';
+                success.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 notification-modern px-8 py-4 text-lg z-50 fade-animation';
+                document.body.appendChild(success);
+                
+                setTimeout(() => success.remove(), 2000);
+                
+                updateTreeDisplay();
+            } else {
+                alert('Not enough Green Points!');
+            }
+        }
+
+        function buyAutoWater(cost) {
+            if (userPoints >= cost) {
+                userPoints -= cost;
+                
+                // Water all trees
+                myTrees.forEach(tree => {
+                    tree.waterLevel = 100;
+                    tree.lastWatered = Date.now();
+                    if (tree.health === 'Needs Water') tree.health = 'Good';
+                });
+                
+                // Update displays
+                document.getElementById('points').textContent = userPoints.toLocaleString();
+                document.getElementById('shop-points').textContent = userPoints.toLocaleString();
+                
+                // Show success animation
+                const success = document.createElement('div');
+                success.innerHTML = '💧 Auto-watering system activated!';
+                success.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 notification-modern px-8 py-4 text-lg z-50 fade-animation';
+                document.body.appendChild(success);
+                
+                setTimeout(() => success.remove(), 2000);
+                
+                updateTreeDisplay();
+                updateTreeList();
+            } else {
+                alert('Not enough Green Points!');
+            }
+        }
+
+        function buyAccelerator(cost) {
+            if (userPoints >= cost) {
+                userPoints -= cost;
+                
+                const tree = myTrees[currentTreeIndex];
+                tree.growth = 100;
+                tree.canCollect = true;
+                tree.health = 'Excellent';
+                
+                // Update displays
+                document.getElementById('points').textContent = userPoints.toLocaleString();
+                document.getElementById('shop-points').textContent = userPoints.toLocaleString();
+                
+                // Show success animation
+                const success = document.createElement('div');
+                success.innerHTML = '⚡ Tree growth accelerated!';
+                success.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 notification-modern px-8 py-4 text-lg z-50 fade-animation';
+                document.body.appendChild(success);
+                
+                setTimeout(() => success.remove(), 2000);
+                
+                updateTreeDisplay();
+                updateTreeList();
+            } else {
+                alert('Not enough Green Points!');
+            }
+        }
+
+        function switchToShop() {
+            // Switch to shop tab
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('border-green-500', 'text-green-600');
+                b.classList.add('border-transparent', 'text-gray-500');
+            });
+            document.querySelector('[data-tab="shop"]').classList.add('border-green-500', 'text-green-600');
+            document.querySelector('[data-tab="shop"]').classList.remove('border-transparent', 'text-gray-500');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById('shop-content').classList.remove('hidden');
+        }
+
+        function harvestAll() {
+            const harvestPoints = matureTrees * 25; // Base harvest points
+            userPoints += harvestPoints;
+            
+            // Update points display
+            document.getElementById('points').textContent = userPoints.toLocaleString();
+            document.getElementById('shop-points').textContent = userPoints.toLocaleString() + ' GP';
+            
+            // Show harvest animation
+            const harvest = document.createElement('div');
+            harvest.innerHTML = `🌳 +${harvestPoints} GP harvested!`;
+            harvest.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-600 text-white px-6 py-3 rounded-lg font-medium text-lg z-50 leaf-animation';
+            document.body.appendChild(harvest);
+            
+            setTimeout(() => {
+                harvest.remove();
+            }, 2000);
+            
+            // Update environmental stats
+            const co2Element = document.getElementById('co2-absorbed');
+            const o2Element = document.getElementById('oxygen-produced');
+            const currentCO2 = parseInt(co2Element.textContent);
+            const currentO2 = parseInt(o2Element.textContent);
+            
+            co2Element.textContent = currentCO2 + Math.floor(matureTrees * 2.5);
+            o2Element.textContent = currentO2 + Math.floor(matureTrees * 3.2);
+        }
+
+        function showTreeInfo(type) {
+            const treeInfo = {
+                'neem': 'Neem trees are excellent air purifiers and have medicinal properties. They can absorb 48 pounds of CO₂ per year!',
+                'banyan': 'Banyan trees provide extensive shade and can support entire ecosystems. They\'re known for their aerial roots and longevity.',
+                'gulmohar': 'Gulmohar trees are famous for their vibrant red-orange flowers and provide excellent shade in urban areas.',
+                'mango': 'Mango trees not only provide delicious fruit but also support local communities and wildlife.',
+                'pine': 'Pine trees are excellent for mountain regions and help prevent soil erosion while providing year-round greenery.',
+                'peepal': 'Peepal trees are sacred in Indian culture and are excellent oxygen producers, especially at night.'
+            };
+            
+            alert(treeInfo[type] || 'This tree contributes to a healthier environment and supports biodiversity!');
+        }
+
+        // Mission modal functions
+        function startMission(title) {
+            document.getElementById('mission-title').textContent = title + ' Challenge';
+            document.getElementById('mission-modal').classList.remove('hidden');
+            document.getElementById('mission-modal').classList.add('flex');
+        }
+
+        function closeMissionModal() {
+            document.getElementById('mission-modal').classList.add('hidden');
+            document.getElementById('mission-modal').classList.remove('flex');
+        }
+
+        function joinMission() {
+            // Add leaf animation
+            const leaf = document.createElement('div');
+            leaf.innerHTML = '🌱';
+            leaf.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl fade-animation z-50';
+            document.body.appendChild(leaf);
+            
+            // Update XP and points
+            const xpElement = document.getElementById('xp');
+            const pointsElement = document.getElementById('points');
+            const currentXP = parseInt(xpElement.textContent.replace(',', ''));
+            const currentPoints = parseInt(pointsElement.textContent.replace(',', ''));
+            
+            xpElement.textContent = (currentXP + 150).toLocaleString();
+            pointsElement.textContent = (currentPoints + 50).toLocaleString();
+            
+            setTimeout(() => {
+                leaf.remove();
+                closeMissionModal();
+                alert('Mission joined! +150 XP and +50 GP earned! Start planting trees! 🌱');
+            }, 2000);
+        }
+
+        // Lesson data
+        const lessonData = {
+            'climate': {
+                title: 'Climate Change & India',
+                videoEmoji: '🌡️',
+                videoTitle: 'Climate Change in India',
+                videoDuration: '20:15',
+                videoBackground: 'from-red-900/50 to-orange-900/50',
+                notes: [
+                    {
+                        color: 'red',
+                        title: 'Key Impact',
+                        content: 'Rising temperatures affecting monsoon patterns across India'
+                    },
+                    {
+                        color: 'orange',
+                        title: 'Agriculture',
+                        content: 'Crop yields declining in northern states due to heat stress'
+                    },
+                    {
+                        color: 'blue',
+                        title: 'Coastal Areas',
+                        content: 'Sea level rise threatening Mumbai, Chennai, and Kolkata'
+                    },
+                    {
+                        color: 'green',
+                        title: 'Solutions',
+                        content: 'Renewable energy adoption and sustainable farming practices'
+                    }
+                ],
+                quiz: {
+                    question: 'Which Indian state is most vulnerable to sea-level rise?',
+                    options: [
+                        { value: 'kerala', text: 'Kerala' },
+                        { value: 'west-bengal', text: 'West Bengal' },
+                        { value: 'gujarat', text: 'Gujarat' },
+                        { value: 'tamil-nadu', text: 'Tamil Nadu' }
+                    ],
+                    correct: 'west-bengal',
+                    explanation: 'West Bengal faces significant threats from sea-level rise due to its low-lying coastal areas and the Sundarbans delta.',
+                    xpReward: 100
+                }
+            },
+            'biodiversity': {
+                title: 'Biodiversity in Indian Forests',
+                videoEmoji: '🌳',
+                videoTitle: 'Indian Forest Biodiversity',
+                videoDuration: '25:30',
+                videoBackground: 'from-green-900/50 to-emerald-900/50',
+                notes: [
+                    {
+                        color: 'green',
+                        title: 'Hotspots',
+                        content: 'Western Ghats and Eastern Himalayas are biodiversity hotspots'
+                    },
+                    {
+                        color: 'blue',
+                        title: 'Species Count',
+                        content: 'India hosts 8% of global biodiversity on 2.4% of land'
+                    },
+                    {
+                        color: 'yellow',
+                        title: 'Threats',
+                        content: 'Deforestation, poaching, and habitat fragmentation'
+                    },
+                    {
+                        color: 'purple',
+                        title: 'Conservation',
+                        content: 'Project Tiger, Project Elephant protecting keystone species'
+                    }
+                ],
+                quiz: {
+                    question: 'Which region is considered a biodiversity hotspot in India?',
+                    options: [
+                        { value: 'thar-desert', text: 'Thar Desert' },
+                        { value: 'western-ghats', text: 'Western Ghats' },
+                        { value: 'gangetic-plains', text: 'Gangetic Plains' },
+                        { value: 'deccan-plateau', text: 'Deccan Plateau' }
+                    ],
+                    correct: 'western-ghats',
+                    explanation: 'The Western Ghats is one of the world\'s eight biodiversity hotspots, home to numerous endemic species.',
+                    xpReward: 125
+                }
+            }
+        };
+
+        let currentLessonType = '';
+
+        // Lesson modal functions
+        function openLesson(title, type) {
+            currentLessonType = type;
+            const lesson = lessonData[type];
+            
+            if (!lesson) {
+                showLockedMessage();
+                return;
+            }
+            
+            // Set lesson title
+            document.getElementById('lesson-title').textContent = lesson.title;
+            
+            // Set video details
+            document.getElementById('lesson-video-emoji').textContent = lesson.videoEmoji;
+            document.getElementById('lesson-video-title').textContent = lesson.videoTitle;
+            document.getElementById('lesson-video-duration').textContent = `Duration: ${lesson.videoDuration}`;
+            
+            // Update video background
+            const videoContainer = document.getElementById('lesson-video-container');
+            const bgDiv = videoContainer.querySelector('.absolute.inset-0');
+            bgDiv.className = `absolute inset-0 bg-gradient-to-br ${lesson.videoBackground} flex items-center justify-center`;
+            
+            // Populate notes
+            const notesContainer = document.getElementById('lesson-notes');
+            notesContainer.innerHTML = '';
+            lesson.notes.forEach(note => {
+                const noteDiv = document.createElement('div');
+                noteDiv.className = `border-l-4 border-${note.color}-500 pl-3`;
+                noteDiv.innerHTML = `<strong class="text-${note.color}-400">${note.title}:</strong> ${note.content}`;
+                notesContainer.appendChild(noteDiv);
+            });
+            
+            // Populate quiz
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = `
+                <div class="mb-6">
+                    <p class="font-medium mb-4 text-white">${lesson.quiz.question}</p>
+                    <div class="space-y-3">
+                        ${lesson.quiz.options.map(option => `
+                            <label class="flex items-center p-3 bg-slate-700/30 rounded-lg cursor-pointer hover:bg-slate-700/50 transition-colors">
+                                <input type="radio" name="lesson-quiz" value="${option.value}" class="mr-3 text-purple-500">
+                                <span class="text-slate-200">${option.text}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+                <div id="quiz-feedback" class="mt-4 text-sm"></div>
+            `;
+            
+            // Show modal
+            document.getElementById('lesson-modal').classList.remove('hidden');
+            document.getElementById('lesson-modal').classList.add('flex');
+        }
+
+        function closeLessonModal() {
+            document.getElementById('lesson-modal').classList.add('hidden');
+            document.getElementById('lesson-modal').classList.remove('flex');
+        }
+
+        function showLockedMessage() {
+            const message = document.createElement('div');
+            message.innerHTML = '🔒 Complete previous lessons to unlock!';
+            message.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-slate-700 text-white px-8 py-4 text-lg z-50 rounded-xl border border-slate-600';
+            document.body.appendChild(message);
+            
+            setTimeout(() => message.remove(), 3000);
+        }
+
+        function playLessonVideo() {
+            const playBtn = document.getElementById('lesson-play-btn');
+            const videoContainer = document.getElementById('lesson-video-container');
+            
+            // Change to playing state
+            playBtn.innerHTML = '⏸️ Pause Video';
+            playBtn.onclick = pauseLessonVideo;
+            
+            // Add playing indicator
+            const indicator = document.createElement('div');
+            indicator.className = 'absolute bottom-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold';
+            indicator.innerHTML = '🔴 LIVE';
+            indicator.id = 'lesson-playing-indicator';
+            videoContainer.appendChild(indicator);
+            
+            // Show success message
+            const success = document.createElement('div');
+            success.innerHTML = '▶️ Video started playing!';
+            success.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 notification-modern px-6 py-3 text-lg z-50 fade-animation';
+            document.body.appendChild(success);
+            
+            setTimeout(() => success.remove(), 2000);
+        }
+
+        function pauseLessonVideo() {
+            const playBtn = document.getElementById('lesson-play-btn');
+            const indicator = document.getElementById('lesson-playing-indicator');
+            
+            // Change to paused state
+            playBtn.innerHTML = '▶️ Play Video';
+            playBtn.onclick = playLessonVideo;
+            
+            // Remove playing indicator
+            if (indicator) indicator.remove();
+        }
+
+        function fullscreenLessonVideo() {
+            const lesson = lessonData[currentLessonType];
+            
+            // Create fullscreen modal
+            const fullscreenModal = document.createElement('div');
+            fullscreenModal.className = 'fixed inset-0 bg-black z-50';
+            fullscreenModal.innerHTML = `
+                <div class="relative w-full h-full">
+                    <!-- Video Background -->
+                    <div class="absolute inset-0 bg-gradient-to-br ${lesson.videoBackground}"></div>
+                    
+                    <!-- Close Button -->
+                    <button onclick="window.exitFullscreen()" class="absolute top-6 right-6 bg-black/70 text-white p-3 rounded-lg hover:bg-black/90 transition-colors z-10">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                    
+                    <!-- Video Controls -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <!-- Play/Pause Button -->
+                        <button id="fullscreen-play-btn" onclick="toggleFullscreenVideo()" class="bg-black/50 text-white p-6 rounded-full hover:bg-black/70 transition-colors">
+                            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Bottom Controls Bar -->
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                        <!-- Progress Bar -->
+                        <div class="mb-4">
+                            <div class="flex items-center space-x-3 text-white text-sm mb-2">
+                                <span id="current-time">0:00</span>
+                                <div class="flex-1 bg-white/20 rounded-full h-2 cursor-pointer" onclick="seekVideo(event)">
+                                    <div id="progress-bar" class="bg-red-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <span id="total-time">${lesson.videoDuration}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Control Buttons -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <!-- Backward Button -->
+                                <button onclick="seekBackward()" class="text-white hover:text-red-400 transition-colors">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                                        <text x="12" y="15" text-anchor="middle" class="text-xs fill-current">10</text>
+                                    </svg>
+                                </button>
+                                
+                                <!-- Play/Pause -->
+                                <button id="control-play-btn" onclick="toggleFullscreenVideo()" class="text-white hover:text-red-400 transition-colors">
+                                    <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </button>
+                                
+                                <!-- Forward Button -->
+                                <button onclick="seekForward()" class="text-white hover:text-red-400 transition-colors">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/>
+                                        <text x="12" y="15" text-anchor="middle" class="text-xs fill-current">10</text>
+                                    </svg>
+                                </button>
+                            </div>
+                            
+                            <!-- Volume Control -->
+                            <div class="flex items-center space-x-3">
+                                <button onclick="toggleMute()" class="text-white hover:text-red-400 transition-colors">
+                                    <svg id="volume-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                                    </svg>
+                                </button>
+                                <div class="w-20 bg-white/20 rounded-full h-2 cursor-pointer" onclick="adjustVolume(event)">
+                                    <div id="volume-bar" class="bg-white h-2 rounded-full transition-all duration-300" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(fullscreenModal);
+            window.currentFullscreenModal = fullscreenModal;
+            
+            // Start video simulation
+            startVideoSimulation();
+        }
+
+        function takeQuiz() {
+            const lesson = lessonData[currentLessonType];
+            const selected = document.querySelector('input[name="lesson-quiz"]:checked');
+            const feedback = document.getElementById('quiz-feedback');
+            
+            if (!selected) {
+                feedback.innerHTML = '<div class="text-yellow-400 font-medium">⚠️ Please select an answer first!</div>';
+                return;
+            }
+            
+            if (selected.value === lesson.quiz.correct) {
+                // Correct answer
+                feedback.innerHTML = `<div class="text-green-400 font-medium">✅ Correct! ${lesson.quiz.explanation}</div>`;
+                
+                // Award XP
+                const xpElement = document.getElementById('xp');
+                const currentXP = parseInt(xpElement.textContent.replace(',', ''));
+                xpElement.textContent = (currentXP + lesson.quiz.xpReward).toLocaleString();
+                
+                // Show success animation
+                const trophy = document.createElement('div');
+                trophy.innerHTML = '🏆';
+                trophy.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl fade-animation z-50';
+                document.body.appendChild(trophy);
+                
+                setTimeout(() => {
+                    trophy.remove();
+                    const success = document.createElement('div');
+                    success.innerHTML = `🎉 Quiz completed! +${lesson.quiz.xpReward} XP earned!`;
+                    success.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 notification-modern px-8 py-4 text-lg z-50 fade-animation';
+                    document.body.appendChild(success);
+                    
+                    setTimeout(() => success.remove(), 3000);
+                }, 2000);
+                
+                // Disable quiz button
+                document.getElementById('quiz-btn').innerHTML = '✅ Quiz Completed!';
+                document.getElementById('quiz-btn').disabled = true;
+                document.getElementById('quiz-btn').className = 'bg-green-500 text-white px-8 py-3 text-lg font-semibold rounded-lg opacity-75 cursor-not-allowed';
+                
+            } else {
+                // Wrong answer
+                feedback.innerHTML = '<div class="text-red-400 font-medium">❌ Try again! Think about the geographical features that make regions vulnerable.</div>';
+            }
+        }
+
+        // Video player functions
+        function playVideo(videoId) {
+            // Simulate video playing
+            const videoContainer = event.target.closest('.aspect-video');
+            const playButton = event.target;
+            
+            // Change to playing state
+            playButton.innerHTML = '⏸️ Pause Video';
+            playButton.onclick = () => pauseVideo(videoId);
+            
+            // Add playing indicator
+            const indicator = document.createElement('div');
+            indicator.className = 'absolute bottom-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold';
+            indicator.innerHTML = '🔴 LIVE';
+            videoContainer.appendChild(indicator);
+            
+            // Show success message
+            const success = document.createElement('div');
+            success.innerHTML = '▶️ Video started playing!';
+            success.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 notification-modern px-6 py-3 text-lg z-50 fade-animation';
+            document.body.appendChild(success);
+            
+            setTimeout(() => success.remove(), 2000);
+        }
+
+        function pauseVideo(videoId) {
+            const videoContainer = event.target.closest('.aspect-video');
+            const pauseButton = event.target;
+            
+            // Change to paused state
+            pauseButton.innerHTML = '▶️ Play Video';
+            pauseButton.onclick = () => playVideo(videoId);
+            
+            // Remove playing indicator
+            const indicator = videoContainer.querySelector('.bg-red-500');
+            if (indicator) indicator.remove();
+        }
+
+        function fullscreenVideo(videoId) {
+            // Create fullscreen modal
+            const fullscreenModal = document.createElement('div');
+            fullscreenModal.className = 'fixed inset-0 bg-black z-50 flex items-center justify-center';
+            fullscreenModal.innerHTML = `
+                <div class="relative w-full h-full">
+                    <div class="absolute inset-0 bg-gradient-to-br from-slate-900/50 to-black/50 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-8xl mb-6">📺</div>
+                            <div class="text-white font-bold text-2xl mb-4">Fullscreen Video Player</div>
+                            <div class="text-slate-300 text-lg mb-6">Video playing in fullscreen mode</div>
+                        </div>
+                    </div>
+                    <button onclick="exitFullscreen()" class="absolute top-6 right-6 bg-black/50 text-white p-3 rounded-lg hover:bg-black/70 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(fullscreenModal);
+            
+            // Add to global scope for exit function
+            window.currentFullscreenModal = fullscreenModal;
+        }
+
+        // Video control variables
+        let isVideoPlaying = false;
+        let currentVideoTime = 0;
+        let totalVideoTime = 1215; // 20:15 in seconds
+        let videoInterval = null;
+        let isMuted = false;
+        let currentVolume = 70;
+
+        // Make exitFullscreen globally accessible
+        window.exitFullscreen = function() {
+            if (window.currentFullscreenModal) {
+                // Stop video simulation
+                if (videoInterval) {
+                    clearInterval(videoInterval);
+                    videoInterval = null;
+                }
+                isVideoPlaying = false;
+                currentVideoTime = 0;
+                
+                window.currentFullscreenModal.remove();
+                window.currentFullscreenModal = null;
+            }
+        }
+        
+        // Also make it accessible without window prefix
+        function exitFullscreen() {
+            window.exitFullscreen();
+        }
+
+        function toggleFullscreenVideo() {
+            isVideoPlaying = !isVideoPlaying;
+            
+            const centerPlayBtn = document.getElementById('fullscreen-play-btn');
+            const controlPlayBtn = document.getElementById('control-play-btn');
+            
+            if (isVideoPlaying) {
+                // Change to pause icons
+                const pauseIcon = '<svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                const pauseIconSmall = '<svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                
+                centerPlayBtn.innerHTML = pauseIcon;
+                controlPlayBtn.innerHTML = pauseIconSmall;
+                
+                // Start video progress
+                startVideoSimulation();
+            } else {
+                // Change to play icons
+                const playIcon = '<svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                const playIconSmall = '<svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                
+                centerPlayBtn.innerHTML = playIcon;
+                controlPlayBtn.innerHTML = playIconSmall;
+                
+                // Stop video progress
+                if (videoInterval) {
+                    clearInterval(videoInterval);
+                    videoInterval = null;
+                }
+            }
+        }
+
+        function startVideoSimulation() {
+            if (videoInterval) clearInterval(videoInterval);
+            
+            videoInterval = setInterval(() => {
+                if (isVideoPlaying && currentVideoTime < totalVideoTime) {
+                    currentVideoTime++;
+                    updateVideoProgress();
+                } else if (currentVideoTime >= totalVideoTime) {
+                    // Video ended
+                    isVideoPlaying = false;
+                    currentVideoTime = 0;
+                    toggleFullscreenVideo();
+                }
+            }, 1000);
+        }
+
+        function updateVideoProgress() {
+            const progressBar = document.getElementById('progress-bar');
+            const currentTimeSpan = document.getElementById('current-time');
+            
+            if (progressBar && currentTimeSpan) {
+                const percentage = (currentVideoTime / totalVideoTime) * 100;
+                progressBar.style.width = percentage + '%';
+                currentTimeSpan.textContent = formatTime(currentVideoTime);
+            }
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function seekVideo(event) {
+            const progressContainer = event.currentTarget;
+            const rect = progressContainer.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const percentage = clickX / rect.width;
+            
+            currentVideoTime = Math.floor(percentage * totalVideoTime);
+            updateVideoProgress();
+        }
+
+        function seekBackward() {
+            currentVideoTime = Math.max(0, currentVideoTime - 10);
+            updateVideoProgress();
+            
+            // Show seek indicator
+            showSeekIndicator('-10s');
+        }
+
+        function seekForward() {
+            currentVideoTime = Math.min(totalVideoTime, currentVideoTime + 10);
+            updateVideoProgress();
+            
+            // Show seek indicator
+            showSeekIndicator('+10s');
+        }
+
+        function showSeekIndicator(text) {
+            const indicator = document.createElement('div');
+            indicator.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/70 text-white px-4 py-2 rounded-lg text-lg font-bold z-50 fade-animation';
+            indicator.textContent = text;
+            document.body.appendChild(indicator);
+            
+            setTimeout(() => indicator.remove(), 1000);
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const volumeIcon = document.getElementById('volume-icon');
+            const volumeBar = document.getElementById('volume-bar');
+            
+            if (isMuted) {
+                volumeIcon.innerHTML = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+                volumeBar.style.width = '0%';
+            } else {
+                volumeIcon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+                volumeBar.style.width = currentVolume + '%';
+            }
+        }
+
+        function adjustVolume(event) {
+            const volumeContainer = event.currentTarget;
+            const rect = volumeContainer.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const percentage = Math.max(0, Math.min(100, (clickX / rect.width) * 100));
+            
+            currentVolume = percentage;
+            isMuted = false;
+            
+            const volumeBar = document.getElementById('volume-bar');
+            const volumeIcon = document.getElementById('volume-icon');
+            
+            volumeBar.style.width = percentage + '%';
+            
+            // Update volume icon based on level
+            if (percentage === 0) {
+                volumeIcon.innerHTML = '<path d="M7 9v6h4l5 5V4l-5 5H7z"/>';
+            } else if (percentage < 50) {
+                volumeIcon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>';
+            } else {
+                volumeIcon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+            }
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('mission-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeMissionModal();
+            }
+        });
+
+        document.getElementById('lesson-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLessonModal();
+            }
+        });
+
+        // Particle system disabled
+        function createParticle() {
+            // Particles disabled for cleaner interface
+            return;
+        }
+        
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize garden system
+            updateTreeList();
+            updateTreeDisplay();
+            
+            // Start particle system
+            setInterval(createParticle, 2000);
+            
+            // Update tree water levels over time (simulate evaporation)
+            setInterval(() => {
+                myTrees.forEach(tree => {
+                    if (tree.waterLevel > 0) {
+                        tree.waterLevel = Math.max(0, tree.waterLevel - 1);
+                        if (tree.waterLevel < 30 && tree.health !== 'Needs Water') {
+                            tree.health = 'Needs Water';
+                        }
+                    }
+                });
+                updateTreeDisplay();
+                updateTreeList();
+            }, 300000); // Every 5 minutes
+            
+            // Simulate real-time updates
+            setInterval(() => {
+                const participants = document.querySelectorAll('[class*="participants"]');
+                participants.forEach(p => {
+                    if (p.textContent.includes('👥')) {
+                        const current = parseInt(p.textContent.match(/\d+/)[0]);
+                        if (Math.random() > 0.7) {
+                            p.textContent = p.textContent.replace(/\d+/, current + 1);
+                        }
+                    }
+                });
+            }, 10000);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97f2b9a7b665c469',t:'MTc1Nzg4MjY5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
